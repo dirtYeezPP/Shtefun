@@ -33,6 +33,13 @@ class Bankkund():
     def __str__(self):
         return f"Kundens namn: {self.namn}, saldo: {self.start_saldo}"
 
+
+class Bank(): 
+    def __init__(self): 
+        pass 
+
+
+
 Jess = Bankkund("Jess", 100, True)
 Noor = Bankkund('Noor', 1000, True)
 Stefan = Bankkund('Stefan', 4206967, False)
