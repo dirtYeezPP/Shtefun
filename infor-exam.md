@@ -359,3 +359,237 @@ Testa ditt program genom att:
  
 
 Extra: Lägg till funktionalitet för att spara och läsa konton till/från en fil. 
+
+
+
+
+``` py
+# 1. GETTERS FÖR ALLA VARIABLER
+    @property 
+    def username(self): 
+        return self.__username 
+
+    @property
+    def password(self):
+        return self.__password
+
+    @property
+    def active(self):
+        return self.__active
+
+    @property
+    def role(self):
+        return self.__role
+
+    # 2. SETTERS (Dörrvakterna)
+    @username.setter 
+    def username(self, new_name): 
+        self.__username = new_name
+        print("name is updated")
+
+    @role.setter
+    def role(self, new_role):
+        permitted_roles = ["admin", "member", "guest"]
+        if new_role not in permitted_roles:
+            self.__role = "guest"
+            print("Ogiltig roll, sätts till guest.")
+        else:
+            self.__role = new_role
+
+
+            elif choice == "4":
+            user_to_find = input("which user?: ")
+            found = False # Håller koll på om vi hittar någon
+
+            # Vi letar igenom listan av skapade hus (konton)
+            for acc in accounts: 
+                if acc.username == user_to_find: 
+                    # VI HITTADE DET! Anropa metoden på just detta objekt (acc)
+                    acc.inactivate() 
+                    print(f"Kontot {acc.username} är nu inaktiverat.")
+                    found = True
+                    break # Avbryt loopen, vi är klara
+            
+            if not found:
+                print("no such user")
+```
+
+
+
+``` py
+class Anvandarkonto:
+    # Klassvariabel (private) som håller koll på antal konton
+    __antal_konton = 0 
+
+    def __init__(self, anvandarnamn, losenord, roll):
+        # Instansvariabler (private)
+        self.__anvandarnamn = anvandarnamn
+        self.__losenord = losenord
+        self.__aktiv = True
+        
+        # Vi sätter rollen via vår setter för att validera den direkt!
+        self.roll = roll 
+        
+        # Öka klassvariabeln med 1 för varje nytt konto
+        Anvandarkonto.__antal_konton += 1
+
+    # --- GETTERS (Uppfyller kravet: "Alla instansvariabler ska ha en @property") ---
+    
+    @property 
+    def anvandarnamn(self): 
+        return self.__anvandarnamn 
+
+    @property
+    def losenord(self):
+        return self.__losenord
+
+    @property
+    def aktiv(self):
+        return self.__aktiv
+
+    @property
+    def roll(self):
+        return self.__roll
+
+    # --- SETTER (Uppfyller kravet: "@property.setter där det är lämpligt") ---
+    
+    @roll.setter
+    def roll(self, ny_roll):
+        tillatna_roller = ["admin", "medlem", "gäst"]
+        if ny_roll in tillatna_roller:
+            self.__roll = ny_roll
+        else:
+            print(f"'{ny_roll}' är ogiltig. Sätter rollen till 'gäst'.")
+            self.__roll = "gäst"
+
+    # --- VANLIGA METODER ---
+
+    def byt_losenord(self, nytt_losenord):
+        if len(nytt_losenord) >= 6:
+            self.__losenord = nytt_losenord
+            print("Lösenordet har uppdaterats!")
+        else:
+            print("Fel: Lösenordet måste vara minst 6 tecken långt.")
+
+    def inaktivera(self):
+        self.__aktiv = False
+        print(f"Kontot {self.__anvandarnamn} är nu inaktiverat.")
+
+    def aktivera(self):
+        self.__aktiv = True
+        print(f"Kontot {self.__anvandarnamn} är nu aktiverat.")
+
+    def ar_aktiv(self):
+        return self.__aktiv
+
+    def autentisera(self, namn, losenord):
+        # Returnerar True om båda stämmer, annars False
+        return self.__anvandarnamn == namn and self.__losenord == losenord
+
+    def __str__(self):
+        status = "Aktivt" if self.__aktiv else "Inaktivt"
+        return f"Användare: {self.__anvandarnamn} | Roll: {self.__roll} | Status: {status}"
+
+    # --- KLASSMETOD ---
+    @classmethod 
+    def visa_antal_konton(cls): 
+        return cls.__antal_konton
+
+
+# --- DEL 2: HUVUDMENY ---
+
+def huvudmeny():
+    konton = [] # Lista som sparar alla skapade objekt
+
+    while True:
+        print("\n--- KONTOHANTERING ---")
+        print("1. Skapa nytt konto")
+        print("2. Visa alla konton")
+        print("3. Byt lösenord")
+        print("4. Inaktivera konto")
+        print("5. Aktivera konto")
+        print("6. Autentisera användare")
+        print("7. Visa antal konton")
+        print("8. Avsluta programmet")
+
+        val = input("Välj ett alternativ (1-8): ")
+
+        if val == "1":
+            namn = input("Ange användarnamn: ")
+            losen = input("Ange lösenord: ")
+            roll = input("Ange roll (admin/medlem/gäst): ")
+            nytt_konto = Anvandarkonto(namn, losen, roll)
+            konton.append(nytt_konto)
+            print("Kontot har skapats!")
+
+        elif val == "2":
+            if not konton:
+                print("Det finns inga konton än.")
+            for konto in konton:
+                print(konto)
+
+        elif val == "3":
+            namn = input("Vilket konto vill du byta lösenord på? ")
+            hittad = False
+            for konto in konton:
+                if konto.anvandarnamn == namn:
+                    hittad = True
+                    nytt_losen = input("Ange det nya lösenordet: ")
+                    konto.byt_losenord(nytt_losen) # Anropar metoden på OBJEKTET
+                    break
+            if not hittad:
+                print("Hittade inget konto med det namnet.")
+
+        elif val == "4":
+            namn = input("Vilket konto vill du inaktivera? ")
+            hittad = False
+            for konto in konton:
+                if konto.anvandarnamn == namn:
+                    hittad = True
+                    konto.inaktivera()
+                    break
+            if not hittad:
+                print("Hittade inget konto med det namnet.")
+
+        elif val == "5":
+            namn = input("Vilket konto vill du aktivera? ")
+            hittad = False
+            for konto in konton:
+                if konto.anvandarnamn == namn:
+                    hittad = True
+                    konto.aktivera()
+                    break
+            if not hittad:
+                print("Hittade inget konto med det namnet.")
+
+        elif val == "6":
+            namn = input("Ange användarnamn: ")
+            losen = input("Ange lösenord: ")
+            hittad = False
+            for konto in konton:
+                if konto.anvandarnamn == namn:
+                    hittad = True
+                    if konto.autentisera(namn, losen):
+                        print("Autentisering lyckades! Inloggad.")
+                    else:
+                        print("Fel lösenord!")
+                    break
+            if not hittad:
+                print("Hittade inget konto med det namnet.")
+
+        elif val == "7":
+            antal = Anvandarkonto.visa_antal_konton()
+            print(f"Totalt antal skapade konton: {antal}")
+
+        elif val == "8":
+            print("Avslutar programmet...")
+            break
+
+        else:
+            print("Ogiltigt val, försök igen.")
+
+
+# Startar programmet
+if __name__ == "__main__":
+    huvudmeny() 
+```
