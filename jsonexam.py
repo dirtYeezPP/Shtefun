@@ -51,6 +51,15 @@ class Account:
         else: 
             print("you little dipshit") 
 
+    def get_dic(self): 
+        dic = {
+            "username": self.__username, 
+            "password": self.__password,
+            "role": self.__role, 
+            "active": self.__active 
+        } 
+        return dic 
+
     def __str__(self):
         status = "Active" if self.__active else "inactive"
         return f"Acc: {self.__username}, Role: {self.__role}, Status: {status}"
@@ -58,11 +67,6 @@ class Account:
     @classmethod 
     def show_acc_amount(cls): 
         return cls.__acc_amount
-
-
-class Accounts: 
-    def __init__(self, accounts: List[Account]):
-        self.accounts = accounts 
 
 def menu(): 
     accounts = []
@@ -149,7 +153,7 @@ def menu():
         for a in accounts: 
             json_str = json.dumps(a.__dict__, indent=4)
             with open("accs.json", "w") as f: 
-                f.write(json_str)
+                f.write(json_str) 
 
 if __name__ == "__main__":
     menu()

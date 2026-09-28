@@ -268,6 +268,44 @@ if __name__ == "__main__":
     huvudmeny() 
 ```
 
+``` py
+# Source - https://stackoverflow.com/a/74940061
+# Posted by Павел
+# Retrieved 2026-09-28, License - CC BY-SA 4.0
+
+class Book:
+    def __init__(self, title: str, author: str, isbn: int, genre: str, numCopies: int):
+      ...
+
+    def get_dict(self):
+        dict_obj = {
+            "title": self._title,
+            "author": self._author,
+            "isbn" : self._isbn,
+            "genre" : self._genre,
+            "numofcopies" : self.__numCopies
+            }
+
+        return dict_obj
+
+
+# Source - https://stackoverflow.com/a/74940061
+# Posted by Павел
+# Retrieved 2026-09-28, License - CC BY-SA 4.0
+
+if __name__ == '__main__':
+    with open('your.json', 'r') as f:
+        books_json = f.read()
+
+    books = json.loads(books_json)
+    book = Book('title', 'author', 0, 'genre', 0)
+    books.append(book.get_dict())
+
+    with open('your.json', 'w') as f:
+        f.write(json.dumps(books))
+
+```
+
 
 
 Programmeringsuppgift: Skapa ett användarkontosystem 
