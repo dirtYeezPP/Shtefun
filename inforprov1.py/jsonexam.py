@@ -1,5 +1,4 @@
 import json 
-from typing import List 
 
 class Account:
     __acc_amount = 0
@@ -150,10 +149,7 @@ def menu():
         else: 
             print("there is no such option, try again")
 
-        for a in accounts: 
-            json_str = json.dumps(a.__dict__, indent=4)
-            with open("accs.json", "w") as f: 
-                f.write(json_str) 
+
 
 if __name__ == "__main__":
     menu()
