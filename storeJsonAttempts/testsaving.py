@@ -1,24 +1,11 @@
 import json 
 
-
-
-def menu():
-    print("" \
-    "Hi i want to test this stuff" \
-    "Please follow the instructions given so i can proceed.")
-
 def get_data(): 
-    name = input("give me a name: ")
-    age = input("give me an age: ")
-    desc = input("give me a SHORT description: ")
-
-    data = {
-        "name": name,
-        "age": age,
-        "description": desc
-        }
-    return data
- 
+    data = {}
+    data['name'] = input("give me a name: ")
+    data['age'] = input("give me an age: ")
+    data['desc'] = input("give me a SHORT description: ")
+    return data 
 out = []
 
 while True:
